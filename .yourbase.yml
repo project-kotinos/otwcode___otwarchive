@@ -1,7 +1,6 @@
 dependencies:
   build:
     - ruby:2.6.2
-    - homebrew:latest
 
 build_targets:
   - name: default
