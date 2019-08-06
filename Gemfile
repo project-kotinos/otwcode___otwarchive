@@ -110,7 +110,7 @@ gem 'globalize', git: 'https://github.com/panorama-berlin/globalize'
 gem 'activemodel-serializers-xml'
 
 # Add a clean notifier that shows we are on dev or test
-gem 'rack-dev-mark', '>=0.7.5'
+gem 'rack-dev-mark', '0.7.8'
 
 #Phrase-app
 gem 'phraseapp-in-context-editor-ruby', '>=1.0.6'
