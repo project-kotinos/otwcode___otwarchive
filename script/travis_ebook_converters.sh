@@ -4,7 +4,7 @@ set -e
 apt-get update -qq
 
 # PDF
-apt-get install -qq xfonts-75dpi xfonts-base
+apt-get install -qq xfonts-75dpi xfonts-base gdebi-core
 wget https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox_0.12.5-1.xenial_amd64.deb
 gdebi ./wkhtmltox_0.12.5-1.xenial_amd64.deb
 wkhtmltopdf --version
