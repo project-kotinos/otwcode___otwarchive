@@ -1,6 +1,6 @@
 dependencies:
   build:
-    - ruby:latest
+    - ruby:2.6.2
     - homebrew:latest
 
 build_targets:
