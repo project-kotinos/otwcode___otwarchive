@@ -1,0 +1,17 @@
+dependencies:
+  build:
+    - ruby:latest
+    - homebrew:latest
+
+build_targets:
+  - name: default
+    commands:
+        - chmod +x yourbased.sh
+        - ./yourbased.sh
+    environment:
+      - TEST_GROUP=./script/check_syntax
+     
+ci:
+  builds:
+    - name: default
+      build_target: default
