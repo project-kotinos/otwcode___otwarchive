@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -ex
-
+export DEBIAN_FRONTEND=noninteractive
 bash script/travis_ebook_converters.sh
 bundle install --jobs=3 --retry=3
 bash script/travis_configure.sh
