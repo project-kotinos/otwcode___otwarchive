@@ -6,7 +6,7 @@ dependencies:
 build_targets:
   - name: default
     container: 
-      image: yourbase/yb_ubuntu:18.04.1
+      image: yourbase/yb_ubuntu_ng:18.04
     commands:
         - chmod +x yourbased.sh
         - ./yourbased.sh
