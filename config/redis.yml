@@ -1,0 +1,10 @@
+redis_resque:
+  test: <%= ENV['RESQUE_HOSTPORT'] %>
+redis_kudos:
+  test: <%= ENV['KUDOS_HOSTPORT'] %>
+redis_general:
+  test: <%= ENV['REDIS_HOSTPORT'] %>
+redis_rollout:
+  test: <%= ENV['ROLLOUT_HOSTPORT'] %>
+redis_autocomplete:
+  test: <%= ENV['AUTOCOMPLETE_HOSTPORT'] %>
