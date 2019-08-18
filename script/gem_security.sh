@@ -1,4 +1,5 @@
 #!/bin/sh
+set -ex
 TMP=/tmp/audit.$$
 bundle-audit update
 bundle-audit check > $TMP

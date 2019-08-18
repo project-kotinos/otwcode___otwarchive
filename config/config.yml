@@ -59,8 +59,8 @@ ALT_LOGO: 'Archive of Our Own'
 OTWLOGO: 'OTWLogo.png'
 OTWALT_LOGO: 'OTW Logo:closing the circle of the copyright symbol, it symbolizes our creative engagement with media: participating and not just consuming.'
 REVISION: ''
-ES_URL: 'http://127.0.0.1:9400'
-MEMCACHED_URL: '127.0.0.1'
+ES_URL: <%= ENV['ELASTICSEARCH_URL'] %>
+MEMCACHED_URL: <%= ENV['MEMCACHED_HOSPORT'] %>
 
 # tag settings
 DELIMITER_FOR_INPUT: ','  # if you change this, you will need to change
@@ -444,3 +444,4 @@ DUMP_COLLECTION_SEEDS: [
 # Check if a script is supported by the version of Ruby we use:
 # https://ruby-doc.org/core/Regexp.html#class-Regexp-label-Character+Properties
 CHARACTER_COUNT_SCRIPTS: ["Han", "Hiragana", "Katakana", "Thai"]
+BCRYPT_COST: 4

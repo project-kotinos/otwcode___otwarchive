@@ -1,17 +1,106 @@
 dependencies:
   build:
-    - ruby:2.6.2
+    - ruby:2.3.4
     - java:8.202.08
 
 build_targets:
   - name: default
+    dependencies:
+      containers:
+        mysql: 
+          image: yourbase/otwarchive-mysql-server:5.7
+          environment:
+            - MYSQL_DATABASE=otwarchive_test
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_USER=otwarchive
+            - MYSQL_PASSWORD=otwarchive
+          port_check:
+            port: 3306
+            timeout: 90
+        elasticsearch:
+          image: elasticsearch:6.7.0
+          environment:
+            - discovery.type=single-node
+          port_check:
+            port: 9200
+            timeout: 120
+        redis1: &redis_template
+          label: redis1
+          image: redis:latest
+          port_check:
+            port: 6379
+            timeout: 20
+        redis2:
+          <<: *redis_template
+          label: redis2
+        redis3:
+          <<: *redis_template
+          label: redis3
+        redis4:
+          <<: *redis_template
+          label: redis4
+        redis5:
+          <<: *redis_template
+          label: redis5
+        redis6:
+          <<: *redis_template
+          label: redis6
+        memcached:
+          image: memcached:latest
+          port_check:
+            port: 11211
+            timeout: 20
+
     container: 
-      image: yourbase/yb_ubuntu_ng:18.04
+      image: yourbase/yb_ubuntu:16.04
     commands:
-        - chmod +x yourbased.sh
-        - ./yourbased.sh
+        - apt -y install mysql-client
+        - gem update --system
+        - gem install bundler
+        - bash script/install_ebook_converters.sh
+        - bundle install --jobs=3 --retry=3
+        - mysql -e "ALTER DATABASE otwarchive_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+        - bundle exec rake db:schema:load --trace
+        - bundle exec rake db:migrate --trace
+        - bundle exec ./script/check_syntax
+        - bundle exec "rake db:otwseed"
+        - bundle exec "rspec spec/controllers"
+        - bundle exec "rspec spec/miscellaneous"
+        - bundle exec "rspec spec/models"
+        - bundle exec "cucumber -r features features/admins             -f Ao3Cucumber::Formatter --color"
+        - bundle exec "cucumber -r features features/bookmarks          -f Ao3Cucumber::Formatter --color"
+        - bundle exec "cucumber -r features features/collections        -f Ao3Cucumber::Formatter --color"
+        - bundle exec "cucumber -r features features/comments_and_kudos -f Ao3Cucumber::Formatter --color"
+        - bundle exec "cucumber -r features features/gift_exchanges     -f Ao3Cucumber::Formatter --color"
+        - bundle exec "cucumber -r features features/importing          -f Ao3Cucumber::Formatter --color"
+        - bundle exec "cucumber -r features features/other_a            -f Ao3Cucumber::Formatter --color"
+        - bundle exec "cucumber -r features features/other_b            -f Ao3Cucumber::Formatter --color"
+        - bundle exec "cucumber -r features features/prompt_memes_a     -f Ao3Cucumber::Formatter --color"
+        - bundle exec "cucumber -r features features/prompt_memes_b     -f Ao3Cucumber::Formatter --color"
+        - bundle exec "cucumber -r features features/prompt_memes_c     -f Ao3Cucumber::Formatter --color"
+        - bundle exec "cucumber -r features features/search             -f Ao3Cucumber::Formatter --color"
+        - bundle exec "cucumber -r features features/tag_sets           -f Ao3Cucumber::Formatter --color"
+        - bundle exec "cucumber -r features features/tags_and_wrangling -f Ao3Cucumber::Formatter --color"
+        - bundle exec "cucumber -r features features/users              -f Ao3Cucumber::Formatter --color"
+        - bundle exec "cucumber -r features features/works              -f Ao3Cucumber::Formatter --color"
+
+ 
+
     environment:
+      - MYSQL_HOST={{ .Containers.IP "mysql" }}
+      - MYSQL_PWD=root
+      - RAILS_ENV=test
       - TEST_GROUP=./script/check_syntax
+      - DEBIAN_FRONTEND=noninteractive
+      - MYSQL_URL=mysql2://otwarchive:otwarchive@{{ .Containers.IP "mysql" }}/otwarchive_test
+      - MEMCACHED_HOSTPORT={{ .Containers.IP "memcached" }}:11211
+      - RESQUE_HOSTPORT={{ .Containers.IP "redis1" }}:6379
+      - KUDOS_HOSTPORT={{ .Containers.IP "redis2" }}:6379
+      - REDIS_HOSTPORT={{ .Containers.IP "redis3" }}:6379
+      - ROLLOUT_HOSTPORT={{ .Containers.IP "redis4" }}:6379
+      - AUTOCOMPLETE_HOSTPORT={{ .Containers.IP "redis5" }}:6379
+      - CUCUMBER_HOSTPORT={{ .Containers.IP "redis6" }}:6379
+      - ELASTICSEARCH_URL=http://{{ .Containers.IP "elasticsearch" }}:9200
      
 ci:
   builds:

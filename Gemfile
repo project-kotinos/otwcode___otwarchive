@@ -51,7 +51,7 @@ gem 'akismetor'
 gem 'httparty'
 gem 'htmlentities'
 gem 'whenever', '~>0.6.2', require: false
-gem 'nokogiri', '>= 1.8.5'
+gem 'nokogiri', '>= 1.10.4'
 gem 'mechanize'
 gem 'sanitize', '>= 4.6.5'
 # Until there is a working solution to
