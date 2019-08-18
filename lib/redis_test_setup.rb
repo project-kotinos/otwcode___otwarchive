@@ -3,6 +3,7 @@
 module RedisTestSetup
 
   def start_redis!(rails_root, env)
+    return
     dir_temp = File.expand_path(File.join(rails_root, 'log'))
     dir_conf = File.expand_path(File.join(rails_root, 'config'))
     cwd = Dir.getwd
